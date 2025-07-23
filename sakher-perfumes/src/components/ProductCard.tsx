@@ -79,7 +79,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           <span className="font-display text-xl font-semibold text-primary">
             {Number(product.price).toFixed(2)} kr
           </span>
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2">
             <button
               onClick={handleBuyNow}
               className="flex-1 bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 text-sm"

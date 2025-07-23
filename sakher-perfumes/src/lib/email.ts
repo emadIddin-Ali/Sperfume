@@ -12,6 +12,16 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// Helper to ensure transport config is valid
+async function verifyTransport() {
+  try {
+    await transporter.verify();
+    console.log('SMTP connection verified');
+  } catch (err) {
+    console.error('SMTP verification failed:', err);
+  }
+}
+
 // Email templates
 const createCustomerEmail = (customerName: string, customerEmail: string, cart: CartItem[], total: number) => {
   const itemsList = cart.map(item => 
@@ -78,13 +88,18 @@ const createAdminEmail = (customerName: string, customerEmail: string, cart: Car
 };
 
 export const sendOrderEmails = async (
-  customerName: string, 
-  customerEmail: string, 
+  customerName: string,
+  customerEmail: string,
   cart: CartItem[]
 ) => {
   const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  
+
   try {
+    // Quick check for required environment variables
+    if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
+      throw new Error('SMTP environment variables are not fully configured');
+    }
+
     console.log('Attempting to send emails...');
     console.log('SMTP Config:', {
       host: process.env.SMTP_HOST,
@@ -93,7 +108,9 @@ export const sendOrderEmails = async (
       from: process.env.SMTP_FROM,
       adminEmail: process.env.ADMIN_EMAIL
     });
-    
+
+    await verifyTransport();
+
     // Send customer confirmation email
     const customerEmailResult = await transporter.sendMail(createCustomerEmail(customerName, customerEmail, cart, total));
     console.log('Customer email sent:', customerEmailResult);
