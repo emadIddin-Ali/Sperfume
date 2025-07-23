@@ -203,6 +203,12 @@ SMTP_USER=resend
 SMTP_PASS=your_resend_api_key
 ```
 
+## 📑 Viewing Changes
+
+All updates to this project are tracked with Git. Run `git log` to view the
+commit history or `git diff` to inspect specific modifications. The `docs/`
+folder contains additional stage notes outlining planned features.
+
 ## 🤝 Contributing
 
 1. Fork the repository
